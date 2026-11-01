@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>提交表單 — 1950NovW1 (王國 #1950)</title>
+<style>
+  :root {
+    --bg: #0e1420;
+    --panel: #151c2b;
+    --panel2: #1b2436;
+    --field: #223049;
+    --field-ph: #6b7a93;
+    --text: #e8edf5;
+    --muted: #9aa7bd;
+    --border: #273346;
+    --gold: #f5b942;
+    --blue: #4f93ff;
+    --red: #ff5c6c;
+    --slot-on: #35d07f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", "Microsoft JhengHei", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 28px 18px 60px;
+  }
+
+  h1 { text-align: center; color: var(--gold); font-size: 44px; margin: 10px 0 6px; letter-spacing: 1px; }
+  .sub { text-align: center; color: var(--muted); font-size: 16px; margin: 0 0 26px; }
+  .sub .kd {
+    display: inline-block; margin-left: 10px; padding: 3px 12px; border-radius: 999px;
+    border: 1px solid var(--gold); color: var(--gold); font-size: 14px;
+  }
+
+  .card {
+    max-width: 1500px; margin: 0 auto;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 16px; padding: 26px 28px;
+  }
+
+  h2.section { font-size: 24px; margin: 0 0 18px; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 48px 1fr 1fr;
+    gap: 14px 18px;
+    align-items: end;
+  }
+  .field label { display: block; color: var(--muted); font-size: 15px; margin-bottom: 6px; }
+  .field input {
+    width: 100%; padding: 11px 14px; font-size: 15px;
+    background: var(--field); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+  }
+  .field input::placeholder { color: var(--field-ph); }
+  .qmark {
+    width: 44px; height: 44px; border-radius: 50%; background: var(--panel2);
+    border: 1px solid var(--border); color: var(--muted);
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    cursor: help; align-self: end; margin-bottom: 1px;
+  }
+
+  .upload-row { margin-top: 22px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .upload-row .cap { color: var(--muted); font-size: 15px; width: 100%; margin-bottom: 4px; }
+  .btn-file {
+    background: var(--panel2); color: var(--gold); border: 1px solid var(--border);
+    border-radius: 8px; padding: 9px 16px; font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+  .no-file { color: var(--muted); font-size: 14px; }
+  .upload-hint { color: var(--field-ph); font-style: italic; font-size: 14px; margin-left: auto; max-width: 340px; }
+
+  .divider { height: 1px; background: var(--border); margin: 22px 0; }
+
+  .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .tz { display: flex; align-items: center; gap: 12px; }
+  .tz .lbl { color: var(--muted); font-size: 14px; letter-spacing: .5px; }
+  .toggle { display: inline-flex; background: var(--panel2); border: 1px solid var(--border); border-radius: 999px; padding: 4px; }
+  .toggle button {
+    border: 0; background: transparent; color: var(--muted); cursor: pointer;
+    padding: 7px 16px; border-radius: 999px; font-size: 14px; font-weight: 600;
+  }
+  .toggle button.on { background: var(--gold); color: #1a1205; }
+
+  .legend { display: flex; align-items: center; gap: 18px; background: var(--panel2);
+    border: 1px solid var(--border); border-radius: 999px; padding: 8px 18px; font-size: 14px; }
+  .legend .t { color: var(--muted); font-weight: 600; }
+  .legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+  .dot.g { background: var(--slot-on); }
+  .dot.y { background: var(--gold); }
+  .dot.r { background: var(--red); }
+
+  /* three day columns */
+  .days { max-width: 1500px; margin: 22px auto 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .day {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 22px 20px;
+  }
+  .day h3 { font-size: 22px; margin: 0 0 6px; }
+  .day.d1 h3 { color: var(--gold); }
+  .day.d2 h3 { color: var(--blue); }
+  .day.d4 h3 { color: var(--red); }
+  .day .desc { color: var(--muted); font-style: italic; font-size: 13px; margin: 0 0 18px; line-height: 1.5; }
+  .day .desc b { color: var(--text); font-style: normal; }
+
+  .block-title { font-size: 17px; margin: 0 0 10px; }
+  .seg { display: flex; gap: 8px; margin-bottom: 12px; }
+  .seg button {
+    flex: 1; padding: 9px 0; font-size: 14px; font-weight: 700; cursor: pointer;
+    background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 8px;
+  }
+  .seg button.on { background: var(--gold); color: #1a1205; border-color: var(--gold); }
+  .unit { color: var(--muted); font-size: 12px; letter-spacing: 1px; margin: 2px 0 4px; }
+  .num {
+    width: 100%; padding: 10px 12px; font-size: 14px; background: var(--field); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px; margin-bottom: 14px;
+  }
+  .res-label { font-size: 17px; margin: 4px 0 8px; }
+  .res-input {
+    width: 100%; padding: 11px 12px; background: var(--field); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px; margin-bottom: 18px;
+  }
+
+  .slots { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; }
+  .day.d4 .slots { grid-template-columns: repeat(7, 1fr); }
+  .slot {
+    position: relative; background: var(--field); border: 1px solid var(--border);
+    border-radius: 8px; padding: 9px 4px; text-align: center; font-size: 12px; line-height: 1.35;
+    cursor: pointer; user-select: none;
+  }
+  .slot .on-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--slot-on); }
+
+  @media (max-width: 1100px) {
+    .days { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .qmark { display: none; }
+  }
+</style>
+</head>
+<body>
+
+  <h1>提交表單</h1>
+  <p class="sub">1950NovW1 <span class="kd">王國 #1950</span></p>
+
+  <!-- 玩家資訊 -->
+  <section class="card">
+    <h2 class="section">你的資訊</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label>玩家 ID（數字）</label>
+        <input type="text" placeholder="例如 12345678">
+      </div>
+      <div class="qmark" title="在遊戲個人檔案中可找到你的玩家 ID">?</div>
+      <div class="field">
+        <label>玩家名稱</label>
+        <input type="text" placeholder="例如 KingArthur">
+      </div>
+      <div class="field">
+        <label>聯盟</label>
+        <input type="text" placeholder="例如 KVK">
+      </div>
+    </div>
+
+    <div class="upload-row">
+      <div class="cap">背包截圖（選填）</div>
+      <button class="btn-file" type="button">選擇檔案</button>
+      <span class="no-file">未選擇任何檔案</span>
+      <span class="upload-hint">上傳你的背包截圖，協助驗證你的資源。</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="toolbar">
+      <div class="tz">
+        <span class="lbl">時區顯示：</span>
+        <div class="toggle">
+          <button class="on" type="button">🌐 UTC</button>
+          <button type="button">🕗 當地時間（台北）</button>
+        </div>
+      </div>
+      <div class="legend">
+        <span class="t">時段需求：</span>
+        <span><span class="dot g"></span>低（0–10）</span>
+        <span><span class="dot y"></span>中（11–20）</span>
+        <span><span class="dot r"></span>高（21+）</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 三天欄位 -->
+  <section class="days">
+
+    <!-- Day 1 -->
+    <div class="day d1">
+      <h3>第 1 天：建設</h3>
+      <p class="desc">輸入資源並勾選<b>所有可行的時段</b>。選越多時段，系統越有彈性幫你媒合。</p>
+
+      <div class="block-title">加速道具</div>
+      <div class="seg">
+        <button type="button">天</button>
+        <button type="button">小時</button>
+        <button class="on" type="button">分鐘</button>
+      </div>
+      <div class="unit">分鐘</div>
+      <input class="num" type="text" value="0">
+
+      <div class="res-label">真金</div>
+      <input class="res-input" type="text">
+
+      <div class="res-label">精煉真金</div>
+      <input class="res-input" type="text">
+
+      <div class="slots" data-day="1"></div>
+    </div>
+
+    <!-- Day 2 -->
+    <div class="day d2">
+      <h3>第 2 天：研究</h3>
+      <p class="desc">輸入資源並勾選<b>所有可行的時段</b>。選越多時段，系統越有彈性幫你媒合。</p>
+
+      <div class="block-title">加速道具</div>
+      <div class="seg">
+        <button type="button">天</button>
+        <button type="button">小時</button>
+        <button class="on" type="button">分鐘</button>
+      </div>
+      <div class="unit">分鐘</div>
+      <input class="num" type="text" value="0">
+
+      <div class="res-label">真金粉塵</div>
+      <input class="res-input" type="text">
+
+      <div class="slots" data-day="2"></div>
+    </div>
+
+    <!-- Day 4 -->
+    <div class="day d4">
+      <h3>第 4 天：部隊訓練</h3>
+      <p class="desc">輸入資源並勾選<b>所有可行的時段</b>。選越多時段，系統越有彈性幫你媒合。</p>
+
+      <div class="block-title">加速道具</div>
+      <div class="seg">
+        <button type="button">天</button>
+        <button type="button">小時</button>
+        <button class="on" type="button">分鐘</button>
+      </div>
+      <div class="unit">分鐘</div>
+      <input class="num" type="text" value="0">
+
+      <div class="slots" data-day="4"></div>
+    </div>
+
+  </section>
+
+  <script>
+    // 產生 48 個半小時時段 (00:00-00:30 ... 23:30-00:00)，全部預設為「可行」(綠點)
+    function pad(n){ return String(n).padStart(2,'0'); }
+    function slotLabel(i){
+      const sh = Math.floor(i*30/60), sm = (i*30)%60;
+      const em = (i*30+30), eh = Math.floor(em/60)%24, emm = em%60;
+      return pad(sh)+':'+pad(sm)+'<br>'+pad(eh)+':'+pad(emm);
+    }
+    document.querySelectorAll('.slots').forEach(grid => {
+      for(let i=0;i<48;i++){
+        const d = document.createElement('div');
+        d.className = 'slot';
+        d.innerHTML = '<span class="on-dot"></span>' + slotLabel(i);
+        d.addEventListener('click', () => {
+          const dot = d.querySelector('.on-dot');
+          dot.style.display = (dot.style.display === 'none') ? '' : 'none';
+        });
+        grid.appendChild(d);
+      }
+    });
+  </script>
+</body>
+</html>
